@@ -131,7 +131,3 @@ entities:
 - **Click interaction**: Clicking a panel opens the Home Assistant more-info dialog for that panel's entity.
 
 ---
-
-## License
-
-MIT
