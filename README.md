@@ -40,9 +40,9 @@ If you find this card useful, you can support my work:
 
 ### Manual
 
-1. Copy `ha-solar-panel-card/ha-solar-panel-card.js` to `<config>/www/ha-solar-panel-card/ha-solar-panel-card.js`.
+1. Copy `dist/ha-solar-panel-card.js` to `<config>/www/ha-solar-panel-card.js`.
 2. In Home Assistant go to **Settings → Dashboards → Resources** and add:
-   - URL: `/local/ha-solar-panel-card/ha-solar-panel-card.js`
+   - URL: `/local/ha-solar-panel-card.js`
    - Type: `JavaScript Module`
 3. Reload your browser.
 
