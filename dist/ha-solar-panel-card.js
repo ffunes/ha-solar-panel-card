@@ -194,7 +194,7 @@ class SolarPanelCardEditor extends HTMLElement {
       const prev = entitiesTA.parentElement.querySelector('.error-msg');
       if (prev) prev.remove();
       const lines = entitiesTA.value.split('\n').map(s => s.trim()).filter(Boolean);
-      const missing = lines.filter(e => !states[e]);
+      const missing = lines.filter(e => e !== 'blank' && !states[e]);
       if (missing.length > 0) {
         entitiesTA.classList.add('invalid');
         const msg = document.createElement('span');
@@ -293,8 +293,9 @@ class SolarPanelCard extends HTMLElement {
       const eid = this._config.mode === 'microinverter'
         ? this._config.entities[i]
         : (this._config.entity || '');
+      const isBlank = eid === 'blank';
       return `
-        <div class="panel" data-index="${i}" data-entity="${eid}">
+        <div class="panel${isBlank ? ' panel--blank' : ''}" data-index="${i}" data-entity="${isBlank ? '' : eid}">
           <div class="fill-bar"></div>
           <span class="panel-label">--</span>
         </div>`;
@@ -339,6 +340,11 @@ class SolarPanelCard extends HTMLElement {
         }
         .panel:active {
           filter: brightness(1.15);
+        }
+        .panel--blank {
+          visibility: hidden;
+          pointer-events: none;
+          cursor: default;
         }
 
         /* Diagonal shine: simulates anti-reflective coating */
@@ -449,6 +455,7 @@ class SolarPanelCard extends HTMLElement {
     }
 
     panels.forEach((panel, i) => {
+      if (panel.classList.contains('panel--blank')) return;
       const raw = powers[i] || 0;
       const clamped = Math.max(0, Math.min(raw, panel_max_power));
       const pct = (clamped / panel_max_power) * 100;
