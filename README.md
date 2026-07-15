@@ -74,6 +74,7 @@ entity: sensor.total_solar_power    # Only for mode: string
 | `mode` | `string` | Yes | `string` (central inverter) or `microinverter` (one sensor per panel). |
 | `entity` | `string` | `mode: string` | Entity reporting total installation power. |
 | `entities` | `list` | `mode: microinverter` | Ordered list (left→right, top→bottom) of individual panel entities. Length must equal `rows × columns`. |
+| `panel_names` | `list` | — | Optional per-panel labels shown at the top of each panel (left→right, top→bottom). Leave a line blank to skip a panel. |
 
 ---
 

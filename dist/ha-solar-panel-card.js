@@ -98,6 +98,13 @@ class SolarPanelCardEditor extends HTMLElement {
           <span class="hint">Defines the 100% fill level.</span>
         </div>
 
+        <div class="field">
+          <label>Panel names (optional)</label>
+          <textarea name="panel_names" placeholder="Tower&#10;Ballustrade&#10;Carport&#10;..."
+          >${Array.isArray(c.panel_names) ? c.panel_names.join('\n') : (c.panel_names || '')}</textarea>
+          <span class="hint">One name per line, ordered left→right, top→bottom. Leave a line blank to skip a panel.</span>
+        </div>
+
         <div class="section-title">Installation mode</div>
 
         <div class="field">
@@ -150,6 +157,12 @@ class SolarPanelCardEditor extends HTMLElement {
     }
     if (el.name === 'entities') {
       value = value.split('\n').map(s => s.trim()).filter(Boolean);
+    }
+    if (el.name === 'panel_names') {
+      // Keep blank lines to preserve per-panel index alignment
+      const arr = value.split('\n').map(s => s.trim());
+      while (arr.length && arr[arr.length - 1] === '') arr.pop();
+      value = arr.length ? arr : undefined;
     }
     if (el.name === 'name' && value === '') {
       value = undefined;
@@ -294,9 +307,11 @@ class SolarPanelCard extends HTMLElement {
         ? this._config.entities[i]
         : (this._config.entity || '');
       const isBlank = eid === 'blank';
+      const pname = Array.isArray(this._config.panel_names) ? (this._config.panel_names[i] || '') : '';
       return `
         <div class="panel${isBlank ? ' panel--blank' : ''}" data-index="${i}" data-entity="${isBlank ? '' : eid}">
           <div class="fill-bar"></div>
+          ${pname ? `<span class="panel-name">${pname}</span>` : ''}
           <span class="panel-label">--</span>
         </div>`;
     }).join('');
@@ -384,6 +399,21 @@ class SolarPanelCard extends HTMLElement {
           background: linear-gradient(to top, #14532d, #16a34a, #4ade80);
           transition: height 0.4s ease-out;
           z-index: 1;
+        }
+
+        /* Panel name (top) */
+        .panel-name {
+          position: absolute;
+          top: 8%;
+          left: 50%;
+          transform: translateX(-50%);
+          color: #fff;
+          font-size: 0.72em;
+          font-weight: 700;
+          text-shadow: 0 1px 4px rgba(0,0,0,1), 0 0 8px rgba(0,0,0,0.8);
+          white-space: nowrap;
+          pointer-events: none;
+          z-index: 4;
         }
 
         /* Power label */
